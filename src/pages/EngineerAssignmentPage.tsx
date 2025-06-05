@@ -57,10 +57,10 @@ function EngineerAssignmentPage() {
             <p>{currentAssignment.allocationPercentage}%</p>
           </div>
 
-          <div>
+          {/* <div>
             <h4 className="font-semibold">Start Date</h4>
             <p>{new Date(currentAssignment.startDate).toLocaleDateString()}</p>
-          </div>
+          </div> */}
 
           {/* <div>
             <h4 className="font-semibold">End Date</h4>

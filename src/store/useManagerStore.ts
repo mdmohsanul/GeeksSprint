@@ -1,9 +1,9 @@
 import { api } from '@/lib/axios';
-import type { EngineerData } from '@/types/user';
+import type { Engineer } from '@/types/user';
 import {create} from 'zustand';
 
 interface ManagerState {
-  engineers: EngineerData[];
+  engineers: Engineer[];
   loading: boolean;
   error?: null | undefined | string;
   fetchEngineers: () => Promise<void>;

@@ -4,19 +4,19 @@ import type { User } from '@/types/user';
 
 
 type AuthState = {
-  user: User | null
-  loading: boolean
-  error: string | null
+  user: User | null;
+  loading: boolean;
+  error: string | null;
   accessToken: string | null;
   refreshToken: string | null;
   isAuthenticated: boolean;
   isAuthChecked: boolean;
-  login: (email: string, password: string) => Promise<void>
-  signup: (userData: User) => Promise<void>
-  logout: () => void
-  checkAuth: () => void
-
-}
+  login: (email: string, password: string) => Promise<void>;
+  signup: (userData: User) => Promise<void>;
+  logout: () => void;
+  checkAuth: () => void;
+  updateProfile: (userId: string, updatedData: Partial<User>) => Promise<void>;
+};
 
 export const useAuthStore = create<AuthState>((set) => ({
   user: null,
@@ -25,55 +25,89 @@ export const useAuthStore = create<AuthState>((set) => ({
   accessToken: null,
   refreshToken: null,
   isAuthenticated: false,
-   isAuthChecked: false,
+  isAuthChecked: false,
 
-  login: async (email,password) => {
-    set({ loading: true, error: null })
+  login: async (email, password) => {
+    set({ loading: true, error: null });
     try {
-      const res = await api.post('/auth/login', { email, password })
-      const { accessToken, refreshToken, user } = res.data.data
-console.log("Login response:", res.data)
-console.log(user)
-      set({ accessToken, refreshToken, user, isAuthenticated: true, loading: false })
+      const res = await api.post("/auth/login", { email, password });
+      const { accessToken, refreshToken, user } = res.data.data;
+      console.log("Login response:", res.data);
+      console.log(user);
+      set({
+        accessToken,
+        refreshToken,
+        user,
+        isAuthenticated: true,
+        loading: false,
+      });
     } catch (err) {
-      console.error("Error logging in:", err)
-      set({ user: null, isAuthenticated: false, isAuthChecked: true })
+      console.error("Error logging in:", err);
+      set({ user: null, isAuthenticated: false, isAuthChecked: true });
     }
   },
 
   signup: async (userData) => {
-    set({ loading: true, error: null })
+    set({ loading: true, error: null });
     try {
-      const res = await api.post('/auth/signup', userData)
-      const {  user } = res.data
-console.log("Signup response:", res.data)
-      set({  user, isAuthenticated: true, loading: false })
+      const res = await api.post("/auth/signup", userData);
+      const { user } = res.data;
+      console.log("Signup response:", res.data);
+      set({ user, isAuthenticated: true, loading: false });
     } catch (err) {
-      console.error("Error signing up:", err)
-      set({ user: null, isAuthenticated: false, isAuthChecked: true })
+      console.error("Error signing up:", err);
+      set({ user: null, isAuthenticated: false, isAuthChecked: true });
     }
   },
 
-  logout: async() => {
-      try{
-        await api.post("/auth/logout")
-        set({ user: null, accessToken: null, refreshToken: null, isAuthenticated: false })
-
-      }catch (err) {
-      console.error("Error logging out:", err)
-      set({ user: null, isAuthenticated: false, isAuthChecked: true })
+  logout: async () => {
+    try {
+      await api.post("/auth/logout");
+      set({
+        user: null,
+        accessToken: null,
+        refreshToken: null,
+        isAuthenticated: false,
+      });
+    } catch (err) {
+      console.error("Error logging out:", err);
+      set({ user: null, isAuthenticated: false, isAuthChecked: true });
     }
-    
   },
 
   checkAuth: async () => {
-   try {
-      const res = await api.get('/auth/currentUser')
-      const { data } = res.data
-      set({ user: data, isAuthenticated: true, isAuthChecked: true })
+    try {
+      const res = await api.get("/auth/currentUser");
+      const { data } = res.data;
+      set({ user: data, isAuthenticated: true, isAuthChecked: true });
     } catch (err) {
-      console.error("Error checking auth:", err)
-      set({ user: null, isAuthenticated: false, isAuthChecked: true })
+      console.error("Error checking auth:", err);
+      set({ user: null, isAuthenticated: false, isAuthChecked: true });
     }
-  }
-}))
+  },
+  updateProfile: async (userId, updatedData) => {
+    set({ loading: true, error: null });
+    try {
+      // Send update request to backend
+      const response = await api.put(`/users/${userId}`, updatedData);
+
+      if (response?.data?.data) {
+        // Update local state with updated user
+        set((state) => ({
+          user: { ...state.user, ...response.data.data },
+          loading: false,
+        }));
+      } else {
+        set({
+          error: "Failed to get updated user from server",
+          loading: false,
+        });
+      }
+    } catch (error) {
+      set({
+        error: error instanceof Error ? error.message : "Failed to update user",
+        loading: false,
+      });
+    }
+  },
+}));

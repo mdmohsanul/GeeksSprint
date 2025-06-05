@@ -2,31 +2,80 @@ import {z} from "zod"
 
 
 // This schema validates the user input for signing up
+// export const signupSchema = z
+//   .object({
+//     name: z.string().min(1, "Name is required"),
+//     email: z.string().email("Invalid email").trim(),
+//     password: z.string().min(6, "Password must be at least 6 characters"),
+//     role: z.enum(["manager", "engineer"], {
+//       errorMap: () => ({ message: "Role is required" }),
+//     }),
+//     skills: z.array(z.string()).optional(),
+//     seniority: z.enum(["junior", "mid", "senior"], {
+//       errorMap: () => ({ message: "Seniority is required" }),
+//     }),
+//     maxCapacity: z.coerce.number().min(50, "Capacity must be at least 50"),
+//     department: z.string().min(1, "Department is required"),
+//   })
+//   .refine(
+//     (data) =>
+//       data?.role !== "engineer" || (data.skills && data.skills.length > 0),
+//     {
+//       message: "Skills are required for engineers",
+//       path: ["skills"],
+//     }
+//   );
+
+// export type SignupData = z.infer<typeof signupSchema>;
+
 export const signupSchema = z
   .object({
     name: z.string().min(1, "Name is required"),
-    email: z.string().email("Invalid email").trim(),
+    email: z.string().email("Invalid email"),
     password: z.string().min(6, "Password must be at least 6 characters"),
-    role: z.enum(["manager", "engineer"], {
-      errorMap: () => ({ message: "Role is required" }),
-    }),
+    role: z.enum(["engineer", "manager"]),
     skills: z.array(z.string()).optional(),
-    seniority: z.enum(["junior", "mid", "senior"], {
-      errorMap: () => ({ message: "Seniority is required" }),
-    }),
-    maxCapacity: z.coerce.number().min(50, "Capacity must be at least 50"),
-    department: z.string().min(1, "Department is required"),
+    seniority: z.enum(["junior", "mid", "senior"]).optional(),
+    maxCapacity: z.coerce.number().min(50, "Capacity must be at least 50").optional(),
+    department: z.string().optional(),
   })
-  .refine(
-    (data) =>
-      data?.role !== "engineer" || (data.skills && data.skills.length > 0),
-    {
-      message: "Skills are required for engineers",
-      path: ["skills"],
-    }
-  );
+  .superRefine((data, ctx) => {
+    if (data.role === "engineer") {
+      if (!data.skills || data.skills.length === 0) {
+        ctx.addIssue({
+          code: "custom",
+          message: "Skills are required for engineers",
+          path: ["skills"],
+        })
+      }
 
-export type SignupData = z.infer<typeof signupSchema>;
+      if (!data.seniority) {
+        ctx.addIssue({
+          code: "custom",
+          message: "Seniority is required for engineers",
+          path: ["seniority"],
+        })
+      }
+
+      if (!data.maxCapacity) {
+        ctx.addIssue({
+          code: "custom",
+          message: "Max Capacity is required for engineers",
+          path: ["maxCapacity"],
+        })
+      }
+
+      if (!data.department || data.department.trim() === "") {
+        ctx.addIssue({
+          code: "custom",
+          message: "Department is required for engineers",
+          path: ["department"],
+        })
+      }
+    }
+  })
+
+export type SignupData = z.infer<typeof signupSchema>
 
 // This schema validates the user input for logging in
 export const loginSchema = z.object({

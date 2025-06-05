@@ -9,6 +9,8 @@ import EngineerDashboard from "@/pages/EngineerDashboard";
 import AssignmentPage from "@/pages/AssignmentPage";
 import ProjectPage from "@/pages/ProjectPage";
 import ProjectDetailPage from "@/pages/ProjectDetailPage";
+import ProfilePage from "@/pages/ProfilePage";
+import EngineerAssignmentPage from "@/pages/EngineerAssignmentPage";
 
 const appRouter = createBrowserRouter([
   {
@@ -63,6 +65,22 @@ const appRouter = createBrowserRouter([
             element: (
               <ProtectedRoute allowedRoles={["engineer"]}>
                 <EngineerDashboard />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: "engineer/profile",
+            element: (
+              <ProtectedRoute allowedRoles={["engineer"]}>
+                <ProfilePage />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: "engineer/assignment/:assignmentId",
+            element: (
+              <ProtectedRoute allowedRoles={["engineer"]}>
+                <EngineerAssignmentPage />
               </ProtectedRoute>
             ),
           },

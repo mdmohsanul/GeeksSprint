@@ -20,10 +20,11 @@ import { projectSchema, type ProjectFormData } from "@/lib/validators";
 import type { Project } from "@/types/projects";
 
 type Props = {
-  project?: Project 
+  project?: Project;
+  setDialogOpen: (open: boolean) => void;
 };
 
-export default function ProjectForm({ project }: Props) {
+export default function ProjectForm({ project, setDialogOpen }: Props) {
   const { user } = useAuthStore((state) => state);
   const createProject = useProjectStore((state) => state.createProject);
   const updateProject = useProjectStore((state) => state.updateProject);
@@ -48,18 +49,19 @@ export default function ProjectForm({ project }: Props) {
   });
 
   useEffect(() => {
-  if (project) {
-    reset({
-      ...project,
-      requiredSkills: Array.isArray(project.requiredSkills)
-        ? project.requiredSkills.join(", ")
-        : project.requiredSkills,
-      managerId: typeof project.managerId === "object"
-        ? project.managerId._id // <-- extract ID here
-        : project.managerId,
-    });
-  }
-}, [project, reset]);
+    if (project) {
+      reset({
+        ...project,
+        requiredSkills: Array.isArray(project.requiredSkills)
+          ? project.requiredSkills.join(", ")
+          : project.requiredSkills,
+        managerId:
+          typeof project.managerId === "object"
+            ? project.managerId._id // <-- extract ID here
+            : project.managerId,
+      });
+    }
+  }, [project, reset]);
 
   const onSubmit = (data: ProjectFormData) => {
     const formattedData = {
@@ -73,6 +75,7 @@ export default function ProjectForm({ project }: Props) {
     } else {
       createProject(formattedData);
     }
+    setDialogOpen(false);
   };
 
   return (
@@ -85,7 +88,9 @@ export default function ProjectForm({ project }: Props) {
           <div>
             <Label>Project Name</Label>
             <Input {...register("name")} />
-            {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
+            {errors.name && (
+              <p className="text-red-500 text-sm">{errors.name.message}</p>
+            )}
           </div>
 
           <div>
@@ -105,7 +110,9 @@ export default function ProjectForm({ project }: Props) {
                 <SelectItem value="completed">Completed</SelectItem>
               </SelectContent>
             </Select>
-            {errors.status && <p className="text-red-500 text-sm">{errors.status.message}</p>}
+            {errors.status && (
+              <p className="text-red-500 text-sm">{errors.status.message}</p>
+            )}
           </div>
 
           <div>
@@ -139,7 +146,10 @@ export default function ProjectForm({ project }: Props) {
 
           <div>
             <Label>Team Size</Label>
-            <Input type="number" {...register("teamSize", { valueAsNumber: true })} />
+            <Input
+              type="number"
+              {...register("teamSize", { valueAsNumber: true })}
+            />
             {errors.teamSize && (
               <p className="text-red-500 text-sm">{errors.teamSize.message}</p>
             )}
@@ -154,7 +164,9 @@ export default function ProjectForm({ project }: Props) {
             <Label>Description</Label>
             <Textarea {...register("description")} />
             {errors.description && (
-              <p className="text-red-500 text-sm">{errors.description.message}</p>
+              <p className="text-red-500 text-sm">
+                {errors.description.message}
+              </p>
             )}
           </div>
 

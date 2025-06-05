@@ -121,7 +121,7 @@ export default function AssignmentForm({
                   {projects.length > 0 && (
                     <>
                       {projects.map((p) => (
-                        <SelectItem key={p._id} value={p._id}>
+                        <SelectItem key={p._id} value={p._id as string}>
                           {p.name}
                         </SelectItem>
                       ))}

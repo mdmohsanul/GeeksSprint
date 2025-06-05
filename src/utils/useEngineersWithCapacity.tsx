@@ -1,14 +1,12 @@
 import type { EngineerWithCapacity } from "@/components/Engineer/EngineerCard";
 import type { Assignment } from "@/types/assignment";
-import type { EngineerData } from "@/types/user";
+import type { Engineer } from "@/types/user";
 import { useMemo } from "react";
 
 export const useEngineersWithCapacity = (
-  engineers: EngineerData[],
+  engineers: Engineer[],
   assignments: Assignment[]
 ): EngineerWithCapacity[] => {
-
-  
   return useMemo(() => {
     const now = new Date();
 
@@ -27,7 +25,8 @@ export const useEngineersWithCapacity = (
 
       const availableCapacity = engineer.maxCapacity - currentLoad;
 
-      const utilization = ((currentLoad / engineer.maxCapacity) * 100).toFixed(1) + "%";
+      const utilization =
+        ((currentLoad / engineer.maxCapacity) * 100).toFixed(1) + "%";
 
       let status: "Optimal" | "Underutilized" | "Overloaded";
       if (currentLoad === engineer.maxCapacity) status = "Optimal";

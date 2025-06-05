@@ -9,6 +9,10 @@ export interface EngineerWithCapacity extends Engineer {
   currentLoad: number;
   utilization: string;
   status: "Overloaded" | "Underutilized" | "Optimal";
+  role: string;
+  seniority: string;
+  createdAt: string;
+  updatedAt: string;
 }
 interface EngineerCardProps {
   engineer: EngineerWithCapacity;

@@ -19,13 +19,13 @@ function EngineerAssignmentPage() {
   console.log("EngineerAssignmentPage currentAssignment:", currentAssignment);
   return (
     <div className="p-6 max-w-4xl mx-auto">
-         <Button
-          variant="outline"
-          className="mb-4"
-          onClick={() => window.history.back()}
-        >
-          <FaArrowCircleLeft className="mr-2" /> Back
-        </Button>
+      <Button
+        variant="outline"
+        className="mb-4"
+        onClick={() => window.history.back()}
+      >
+        <FaArrowCircleLeft className="mr-2" /> Back
+      </Button>
       <Card>
         <CardHeader>
           <h2 className="text-2xl font-bold">Assignment Details</h2>
@@ -65,11 +65,6 @@ function EngineerAssignmentPage() {
           <div>
             <h4 className="font-semibold">End Date</h4>
             <p>{new Date(currentAssignment.endDate).toLocaleDateString()}</p>
-          </div>
-
-          <div className="md:col-span-2">
-            <h4 className="font-semibold">Created At</h4>
-            <p>{new Date(currentAssignment.createdAt).toLocaleString()}</p>
           </div>
         </CardContent>
       </Card>

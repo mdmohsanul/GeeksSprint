@@ -1,11 +1,11 @@
  
 
 export interface Assignment {
-  _id: string;
+  _id?: string;
   engineerId: {
     _id: string;
     name: string;
-    email: string;
+    email?: string;
   };
   projectId: {
     _id: string;
@@ -16,5 +16,5 @@ export interface Assignment {
   allocationPercentage: number;
   startDate: string;
   endDate: string;
-  createdAt: string;
+  createdAt?: string;
 }

@@ -1,27 +1,32 @@
 import AssignmentCard from "@/components/Assignment/AssignmentCard";
-import AssignmentForm from "@/components/Assignment/AssignmentForm"
+import AssignmentForm from "@/components/Assignment/AssignmentForm";
 import useAssignmentStore from "@/store/useAssignmentStore";
 import useManagerStore from "@/store/useManagerStore";
-import useProjectStore from "@/store/useProjectStore"
+import useProjectStore from "@/store/useProjectStore";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"; 
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { Assignment } from "@/types/assignment";
-import type { AssignmentFormData } from "@/lib/validators";
+
 import Header from "@/components/Header";
 import BackButton from "@/components/BackButton";
+import type { AssignmentFormData } from "@/lib/validators";
 
 const AssignmentPage = () => {
   const fetchEngineers = useManagerStore((state) => state.fetchEngineers);
   const fetchProjects = useProjectStore((state) => state.fetchProjects);
+
   const fetchAssignments = useAssignmentStore(
     (state) => state.fetchAssignments
   );
   const assignments = useAssignmentStore((state) => state.assignments);
-  const createAssignment = useAssignmentStore(
-    (state) => state.createAssignment
-  );
+
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const [editAssignment, setEditAssignment] = useState<Assignment | null>(null);
@@ -33,20 +38,44 @@ const AssignmentPage = () => {
     fetchAssignments();
   }, [fetchEngineers, fetchProjects, fetchAssignments]);
 
-  const handleCreateAssignment = (data: Assignment) => {
-    console.log("Create", data);
-    setDialogOpen(false);
-    // ✅ Send POST request to /assignments
-    createAssignment(data);
+  const handleCreateAssignment = (formData: AssignmentFormData) => {
+    // const engineer = engineers.find((e) => e._id === formData.engineerId);
+
+    // if (!engineer) {
+    //   console.error("Engineer not found");
+    //   return;
+    // }
+
+    // const assignment: Assignment = {
+    //   ...formData,
+    //   engineerId: {
+    //     _id: engineer._id,
+    //     name: engineer.name,
+    //     email: engineer.email,
+    //   },
+    //   projectId: {
+    //     _id: projects._id,
+    //     name: projects.name,
+    //     status: projects.status,
+    //   },
+    //   role: formData.role,
+    //   allocationPercentage: formData.allocationPercentage,
+    //   startDate: formData.startDate,
+    //   endDate: formData.endDate,
+    // };
+
+    // Now you can send this assignment to your backend
+    console.log("Creating assignment with data:", formData);
   };
 
-  const handleUpdateAssignment = (data: AssignmentFormData) => {
-    const payload: Assignment = {
-      ...data,
-      allocationPercentage: String(data.allocationPercentage), // ← cast to match backend if needed
-    };
-    // ✅ Send PUT request to /assignments/:id
-  };
+  // const handleUpdateAssignment = (data: AssignmentFormData) => {
+  //   const payload: Assignment = {
+  //     ...data,
+  //   };
+  //   updateAssignment(editAssignment?._id, payload);
+  //   setDialogOpen(false);
+  //   // ✅ Send PUT request to /assignments/:id
+  // };
 
   //   const handleEdit = (assignment) => {
   //     setEditAssignment(assignment);
@@ -88,15 +117,7 @@ const AssignmentPage = () => {
                   {editAssignment ? "Update Assignment" : "Create Assignment"}
                 </DialogTitle>
               </DialogHeader>
-              <AssignmentForm
-                onSubmit={
-                  editAssignment
-                    ? handleUpdateAssignment
-                    : handleCreateAssignment
-                }
-                defaultValues={editAssignment ?? undefined}
-                mode={editAssignment ? "update" : "create"}
-              />
+              <AssignmentForm onSubmit={handleCreateAssignment} />
             </DialogContent>
           </Dialog>
         </div>
@@ -105,4 +126,4 @@ const AssignmentPage = () => {
   );
 };
 
-export default AssignmentPage
+export default AssignmentPage;

@@ -17,5 +17,6 @@ export type EngineerData = {
   maxCapacity: number;
   currentLoad: number;
   utilization: string; // Percentage as a string
+  email: string;
   status: "Overloaded" | "Underutilized" | "Optimal";
 };

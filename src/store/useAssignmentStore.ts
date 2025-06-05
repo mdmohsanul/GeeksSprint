@@ -9,9 +9,12 @@ interface AssignmentState {
   loading: boolean;
   error?: null | undefined | string;
   fetchAssignments: () => Promise<void>;
-  createAssignment: (data: Omit<Assignment, "_id">) => Promise<void>;
-updateAssignment: (id: string, updatedData: Omit<Assignment, "_id">) => Promise<void>;
-deleteAssignment: (id: string) => Promise<void>;
+  createAssignment: (data: Assignment) => Promise<void>;
+  updateAssignment: (
+    id: string,
+    updatedData: Omit<Assignment, "_id">
+  ) => Promise<void>;
+  deleteAssignment: (id: string) => Promise<void>;
 }
 
 const useAssignmentStore = create<AssignmentState>((set) => ({

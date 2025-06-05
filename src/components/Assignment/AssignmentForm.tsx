@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -25,15 +24,9 @@ import useProjectStore from "@/store/useProjectStore";
 
 type AssignmentFormProps = {
   onSubmit: (data: AssignmentFormData) => void;
-  defaultValues?: Partial<AssignmentFormData>;
-  mode: "create" | "update";
 };
 
-export default function AssignmentForm({
-  onSubmit,
-  defaultValues = {},
-  mode = "create",
-}: AssignmentFormProps) {
+export default function AssignmentForm({ onSubmit }: AssignmentFormProps) {
   const form = useForm<AssignmentFormData>({
     resolver: zodResolver(assignmentSchema),
     defaultValues: {
@@ -43,21 +36,11 @@ export default function AssignmentForm({
       allocationPercentage: 0,
       startDate: "",
       endDate: "",
-      ...defaultValues,
     },
   });
-  console.log("AssignmentForm defaultValues:", defaultValues);
+
   const engineers = useManagerStore((state) => state.engineers);
   const projects = useProjectStore((state) => state.projects);
-
-  useEffect(() => {
-    if (defaultValues && Object.keys(defaultValues).length > 0) {
-      form.reset({
-        ...defaultValues,
-        allocationPercentage: Number(defaultValues.allocationPercentage || 0),
-      });
-    }
-  }, [defaultValues, form]);
 
   const roles = [
     "Developer",
@@ -71,12 +54,7 @@ export default function AssignmentForm({
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit((data) =>
-          onSubmit({
-            ...data,
-            allocationPercentage: data.allocationPercentage,
-          })
-        )}
+        onSubmit={form.handleSubmit(onSubmit)}
         className="grid gap-4 w-full mx-auto mt-8"
       >
         <FormField
@@ -92,12 +70,11 @@ export default function AssignmentForm({
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {engineers.length > 0 &&
-                    engineers.map((e) => (
-                      <SelectItem key={e._id} value={e._id}>
-                        {e.name}
-                      </SelectItem>
-                    ))}
+                  {engineers.map((e) => (
+                    <SelectItem key={e._id} value={e._id}>
+                      {e.name}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
               <FormMessage />
@@ -118,15 +95,11 @@ export default function AssignmentForm({
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {projects.length > 0 && (
-                    <>
-                      {projects.map((p) => (
-                        <SelectItem key={p._id} value={p._id as string}>
-                          {p.name}
-                        </SelectItem>
-                      ))}
-                    </>
-                  )}
+                  {projects.map((p) => (
+                    <SelectItem key={p._id} value={p._id as string}>
+                      {p.name}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
               <FormMessage />
@@ -140,7 +113,7 @@ export default function AssignmentForm({
           render={({ field }) => (
             <FormItem>
               <FormLabel>Role</FormLabel>
-              <Select onValueChange={field.onChange} value={field.value}>
+              <Select onValueChange={field.onChange} value={field.value || ""}>
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder="Select role" />
@@ -208,7 +181,7 @@ export default function AssignmentForm({
         />
 
         <Button type="submit" className="mt-4">
-          {mode === "update" ? "Update Assignment" : "Create Assignment"}
+          Create Assignment
         </Button>
       </form>
     </Form>

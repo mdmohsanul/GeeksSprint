@@ -5,20 +5,23 @@ import { IoIosArrowForward } from "react-icons/io";
 const Sidebarr = () => {
   return (
     <>
-      <div className="w-64 h-screen bg-gray-800 text-white p-4">
-        <ul className="  text-lg text-gray-800 ">
+      <div className="fixed top-16 left-0 w-64 h-screen bg-gray-800 text-white p-4 z-40">
+        <ul className="text-lg text-gray-800">
           {sidebarList.map((item) => (
-            <Link to={item.linkTo} key={item.id}>
-              {" "}
-              <li
-                className={`flex items-center justify-between py-3  cursor-pointer `}
+            <li
+              key={item.id}
+              className="flex items-center justify-between py-3 cursor-pointer"
+            >
+              <Link
+                to={item.linkTo}
+                className="flex w-full items-center justify-between px-4 text-white"
               >
-                <p className="pl-10 text-white">{item.name}</p>{" "}
-                <span className="mr-6">
+                <p>{item.name}</p>
+                <span>
                   <IoIosArrowForward />
                 </span>
-              </li>
-            </Link>
+              </Link>
+            </li>
           ))}
         </ul>
       </div>

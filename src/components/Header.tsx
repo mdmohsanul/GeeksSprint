@@ -9,7 +9,7 @@ const Header = ({ content }: HeaderProps) => {
   const user = useAuthStore((state) => state.user);
   return (
     <>
-      <div className="w-full h-16 bg-gray-800 text-white flex items-center justify-between px-2 md:px-8 ">
+      <div className="w-full fixed top-0 z-30 h-16 bg-gray-800 text-white flex items-center justify-between px-2 md:px-8 ">
         <h1 className="text-lg md:text-2xl font-bold">{content}</h1>
         <div className=" flex items-center gap-4">
           <button

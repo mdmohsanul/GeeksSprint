@@ -28,7 +28,7 @@ const ProjectPage = () => {
     <>
       <Header content="Projects" />
 
-      <section className="max-w-5xl mx-auto ">
+      <section className="max-w-5xl mx-auto mt-16">
         <div className="p-6 space-y-6">
           <div className="flex items-center justify-between">
             <h1 className="text-2xl font-bold">Projects</h1>

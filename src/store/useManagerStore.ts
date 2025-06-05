@@ -17,7 +17,7 @@ const useManagerStore = create<ManagerState>((set) => ({
   fetchEngineers: async () => {
     set({ loading: true, error: null })
     try {
-      const res = await api.get('/users/engineers')
+      const res = await api.get("/engineers");
       console.log("Engineers fetched:", res.data)
       set({ engineers: res.data.data, loading: false })
     } catch (error) {

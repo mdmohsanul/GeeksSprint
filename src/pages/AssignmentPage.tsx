@@ -13,10 +13,8 @@ import {
 import { Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { Assignment } from "@/types/assignment";
-
 import Header from "@/components/Header";
 import BackButton from "@/components/BackButton";
-import type { AssignmentFormData } from "@/lib/validators";
 
 const AssignmentPage = () => {
   const fetchEngineers = useManagerStore((state) => state.fetchEngineers);
@@ -38,50 +36,6 @@ const AssignmentPage = () => {
     fetchAssignments();
   }, [fetchEngineers, fetchProjects, fetchAssignments]);
 
-  const handleCreateAssignment = (formData: AssignmentFormData) => {
-    // const engineer = engineers.find((e) => e._id === formData.engineerId);
-
-    // if (!engineer) {
-    //   console.error("Engineer not found");
-    //   return;
-    // }
-
-    // const assignment: Assignment = {
-    //   ...formData,
-    //   engineerId: {
-    //     _id: engineer._id,
-    //     name: engineer.name,
-    //     email: engineer.email,
-    //   },
-    //   projectId: {
-    //     _id: projects._id,
-    //     name: projects.name,
-    //     status: projects.status,
-    //   },
-    //   role: formData.role,
-    //   allocationPercentage: formData.allocationPercentage,
-    //   startDate: formData.startDate,
-    //   endDate: formData.endDate,
-    // };
-
-    // Now you can send this assignment to your backend
-    console.log("Creating assignment with data:", formData);
-  };
-
-  // const handleUpdateAssignment = (data: AssignmentFormData) => {
-  //   const payload: Assignment = {
-  //     ...data,
-  //   };
-  //   updateAssignment(editAssignment?._id, payload);
-  //   setDialogOpen(false);
-  //   // ✅ Send PUT request to /assignments/:id
-  // };
-
-  //   const handleEdit = (assignment) => {
-  //     setEditAssignment(assignment);
-  //     setDialogOpen(true);
-  //   };
-
   const handleCreateClick = () => {
     setEditAssignment(null);
     setDialogOpen(true);
@@ -90,7 +44,7 @@ const AssignmentPage = () => {
     <>
       <Header content="Assignments" />
 
-      <section className="max-w-5xl mx-auto ">
+      <section className="max-w-5xl mx-auto pt-16">
         <div className="p-6 space-y-6">
           <div className="flex items-center justify-between">
             <h1 className="text-2xl font-bold">Assignments</h1>
@@ -117,7 +71,7 @@ const AssignmentPage = () => {
                   {editAssignment ? "Update Assignment" : "Create Assignment"}
                 </DialogTitle>
               </DialogHeader>
-              <AssignmentForm onSubmit={handleCreateAssignment} />
+              <AssignmentForm />
             </DialogContent>
           </Dialog>
         </div>

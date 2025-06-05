@@ -18,3 +18,12 @@ export interface Assignment {
   endDate: string;
   createdAt?: string;
 }
+
+export interface AssignmentFormData {
+  engineerId: string;
+  projectId: string;
+  role: string;
+  allocationPercentage: number;
+  startDate: string;
+  endDate: string;
+}

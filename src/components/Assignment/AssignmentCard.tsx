@@ -3,13 +3,18 @@ import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
 import { Button } from "../ui/button";
 import type { Assignment } from "@/types/assignment";
+import useAssignmentStore from "@/store/useAssignmentStore";
 
 interface AssignmentCardProps {
   assignment: Assignment;
-    setDialogOpen: (open: boolean) => void;
-    setEditAssignment: (assignment: Assignment | null) => void;
+  setDialogOpen: (open: boolean) => void;
+  setEditAssignment: (assignment: Assignment | null) => void;
 }
-export default function AssignmentCard({ assignment, setDialogOpen, setEditAssignment }: AssignmentCardProps) {
+export default function AssignmentCard({
+  assignment,
+  setDialogOpen,
+  setEditAssignment,
+}: AssignmentCardProps) {
   const {
     engineerId: engineer,
     projectId: project,
@@ -18,16 +23,26 @@ export default function AssignmentCard({ assignment, setDialogOpen, setEditAssig
     startDate,
     endDate,
   } = assignment;
- const handleEdit = (assignment:Assignment) => {
+  const deleteAssignment = useAssignmentStore(
+    (state) => state.deleteAssignment
+  );
+  const handleEdit = (assignment: Assignment) => {
     setEditAssignment(assignment);
     setDialogOpen(true);
+  };
+  const handleDelete = async (id: string) => {
+    if (confirm("Are you sure you want to delete this assignment?")) {
+      await deleteAssignment(id);
+    }
   };
   return (
     <Card className="w-full max-w-md shadow-md border border-muted">
       <CardHeader>
         <CardTitle className="flex justify-between items-center">
           <span>{project?.name || "Unnamed Project"}</span>
-          <Badge variant="outline" className="text-sm capitalize">{project?.status}</Badge>
+          <Badge variant="outline" className="text-sm capitalize">
+            {project?.status}
+          </Badge>
         </CardTitle>
       </CardHeader>
       <CardContent className="text-sm space-y-2">
@@ -50,13 +65,22 @@ export default function AssignmentCard({ assignment, setDialogOpen, setEditAssig
             {endDate ? format(new Date(endDate), "MMM dd, yyyy") : "-"}
           </div>
         </div>
-         <Button
-                variant="secondary"
-                className="mt-2"
-                onClick={() => handleEdit(assignment)}
-              >
-                Update
-              </Button>
+        <div className="flex justify-between items-center">
+          <Button
+            variant="secondary"
+            className="mt-2"
+            onClick={() => handleEdit(assignment)}
+          >
+            Update
+          </Button>
+          <Button
+            variant="secondary"
+            className="mt-2 bg-red-500 hover:bg-red-600 text-white"
+            onClick={() => handleDelete(assignment._id || "")}
+          >
+            Delete
+          </Button>{" "}
+        </div>
       </CardContent>
     </Card>
   );

@@ -20,3 +20,17 @@ export type EngineerData = {
   email: string;
   status: "Overloaded" | "Underutilized" | "Optimal";
 };
+
+export type Engineer = {
+  _id: string;
+  name: string;
+  email: string;
+  role: string;
+  seniority: string;
+  department: string;
+  skills: string[];
+  maxCapacity: number;
+  availableCapacity: number;
+  createdAt: string;
+  updatedAt: string;
+};

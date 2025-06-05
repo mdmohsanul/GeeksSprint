@@ -11,17 +11,20 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { loginSchema } from "@/lib/validators"
-import type { LoginData } from "@/lib/validators"
-// import { useAppDispatch } from "@/app/store"
-// import { emailLogin } from "@/features/auth/authThunks"
-import { useLocation } from "react-router-dom";
+import type { LoginData } from "@/lib/validators";
 
+import { useLocation, useNavigate } from "react-router-dom";
+import { useAuthStore } from "@/store/useAuthStore";
+import { useState } from "react";
 
 export function LoginForm() {
-  // const dispatch = useAppDispatch();
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   const location = useLocation();
-  // const [err, setErr] = useState<string | null>(null);
+  const login = useAuthStore((state) => state.login);
+  // const loading = useAuthStore((state) => state.loading);
+  // const error = useAuthStore((state) => state.error);
+
+  const [err, setErr] = useState<string | null>(null);
 
   const form = useForm<LoginData>({
     resolver: zodResolver(loginSchema),
@@ -34,23 +37,15 @@ export function LoginForm() {
     (location.state as { from?: { pathname: string } })?.from?.pathname ||
     "/dashboard";
 
-  function onSubmit(values: LoginData) {
-    // try {
-    //   dispatch(emailLogin(values)).then((result) => {
-    //     if (result?.meta?.requestStatus === "rejected") {
-    //       setErr("Failed to Log In. Please try again.");
-    //     } else {
-    //       navigate(from, { replace: true });
-    //       // navigate("/dashboard");
-    //     }
-    //     console.log(result);
-    //   });
-    // } catch (error) {
-    //   console.log(error);
-    //   //setErr(error || "Failed to Log In. Please try again.");
-    // }
-    console.log(from)
-    console.log("Form submitted with values:", values);
+  async function onSubmit(values: LoginData) {
+    const { email, password } = values;
+    try {
+      await login(email, password);
+      navigate(from, { replace: true });
+    } catch (error: any) {
+      setErr(error || "Failed to log in. Please try again.");
+    }
+ 
   }
   return (
     <div className="">
@@ -72,7 +67,6 @@ export function LoginForm() {
           <FormField
             control={form.control}
             name="password"
-          
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Password</FormLabel>
@@ -91,7 +85,7 @@ export function LoginForm() {
           </Button>
         </form>
       </Form>
-      {/* {err && <p>{err}</p>} */}
+      {err && <p>{err}</p>}
     </div>
   );
 }
